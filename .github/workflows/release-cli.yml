@@ -47,7 +47,7 @@ jobs:
         with:
           files: |
             cli/build/libs/unidoc-lo-converter-cli-${{ steps.extract_version.outputs.version }}.jar
-            cli-pdf-compare/build/libs/cli-pdf-compare-${{ steps.extract_version.outputs.version }}.jar
+            cli-pdf-compare/build/libs/unidoc-pdf-compare-cli-${{ steps.extract_version.outputs.version }}.jar
           draft: false
           prerelease: false
         env:
