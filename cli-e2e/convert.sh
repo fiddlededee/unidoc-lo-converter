@@ -32,6 +32,14 @@ echo "📍 Test 2: LibreOffice in Docker"
 java -jar "$JAR"  /documents/output/docker/test-1.odt /documents/output/docker/test-2.docx -f PDF --host 127.0.0.1 --port 2002
 echo "✅ Docker test passed"
 
+echo "🔍 Comparing PDF outputs (first different, second identical)..."
+PDF_COMPARE_JAR="cli-pdf-compare/build/libs/unidoc-pdf-compare-cli-${VERSION}.jar"
+
+java -jar "$PDF_COMPARE_JAR" \
+  --compare cli-e2e/output/docker/test-1.pdf cli-e2e/output/docker/test-2.pdf cli-e2e/output/docker/test.diff.pdf \
+  --compare cli-e2e/output/docker/test-1.pdf cli-e2e/output/docker/test-1.pdf cli-e2e/output/docker/test.diff.pdf
+echo "✅ PDF comparison complete"
+
 echo "🧹 Stopping container..."
 docker stop lo && docker rm lo
 echo "✅ Done"

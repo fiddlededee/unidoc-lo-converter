@@ -8,8 +8,12 @@ A wrapper for converting documents using LibreOffice.
 
 See link:core/src/test/kotlin/ru/fiddlededee/unidoc/loconverter/core/DocumentConverterIntegrationTest.kt[DocumentConverterIntegrationTest].
 
-*CLI:*
+== CLI Utilities
 
-See link:cli-e2e/convert.sh[convert.sh].
+*Converter CLI* (`cli`) — converts documents (ODT, DOCX, ODS, XLSX, ODP, PPTX, etc.) to another format via LibreOffice.
 
-Download the CLI JAR from the link:../../releases[Releases] section.
+*PDF Compare CLI* (`cli-pdf-compare`) — compares two PDF files and produces a visual diff.
+
+See link:cli-e2e/convert.sh[convert.sh] for usage examples of both utilities.
+
+Download all CLI JARs from the link:../../releases[Releases] section.

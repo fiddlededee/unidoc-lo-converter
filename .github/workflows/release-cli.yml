@@ -22,7 +22,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Build Fat Jar
-        run: ./gradlew :cli:jar
+        run: ./gradlew :cli:jar :cli-pdf-compare:jar
       - name: Extract Gradle Version
         id: extract_version
         run: |
@@ -45,7 +45,9 @@ jobs:
       - name: Create GitHub Release & Upload JAR
         uses: softprops/action-gh-release@v2
         with:
-          files: cli/build/libs/unidoc-lo-converter-cli-${{ steps.extract_version.outputs.version }}.jar
+          files: |
+            cli/build/libs/unidoc-lo-converter-cli-${{ steps.extract_version.outputs.version }}.jar
+            cli-pdf-compare/build/libs/cli-pdf-compare-${{ steps.extract_version.outputs.version }}.jar
           draft: false
           prerelease: false
         env:
