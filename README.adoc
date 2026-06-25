@@ -6,10 +6,10 @@ A wrapper for converting documents using LibreOffice.
 
 *Java:*
 
-See link:tree/main/core/src/test/kotlin/ru/fiddlededee/unidoc/loconverter/core/DocumentConverterIntegrationTest.kt[DocumentConverterIntegrationTest].
+See link:core/src/test/kotlin/ru/fiddlededee/unidoc/loconverter/core/DocumentConverterIntegrationTest.kt[DocumentConverterIntegrationTest].
 
 *CLI:*
 
-See link:tree/main/cli-e2e/convert.sh[convert.sh].
+See link:cli-e2e/convert.sh[convert.sh].
 
-Download the CLI JAR from the link:releases[Releases] section.
+Download the CLI JAR from the link:../../releases[Releases] section.
