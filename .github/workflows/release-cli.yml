@@ -1,0 +1,52 @@
+
+name: Release CLI Jar
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Build Fat Jar
+        run: ./gradlew :cli:jar
+      - name: Extract Gradle Version
+        id: extract_version
+        run: |
+          VERSION=$(./gradlew properties | grep "^version:" | awk '{print $2}')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+      - name: Validate tag matches Gradle version
+        run: |
+           TAG_VERSION="${{ github.ref_name }}"
+           # Убираем префикс 'v' из тега
+           TAG_VERSION="${TAG_VERSION#v}"
+           GRADLE_VERSION="${{ steps.extract_version.outputs.version }}"
+           
+           if [ "$TAG_VERSION" != "$GRADLE_VERSION" ]; then
+             echo "::error::❌ Тег ($TAG_VERSION) не совпадает с версией в Gradle ($GRADLE_VERSION)"
+             exit 1
+           fi
+           echo "✅ Версии совпадают: $GRADLE_VERSION"
+
+
+      - name: Create GitHub Release & Upload JAR
+        uses: softprops/action-gh-release@v2
+        with:
+          files: cli/build/libs/unidoc-lo-converter-cli-${{ steps.extract_version.outputs.version }}.jar
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
