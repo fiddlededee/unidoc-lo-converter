@@ -1,5 +1,7 @@
 package ru.fiddlededee.unidoc.loconverter.core
 
+import com.sun.star.beans.PropertyValue
+import com.sun.star.beans.XPropertySet
 import com.sun.star.bridge.XBridgeFactory
 import com.sun.star.comp.helper.Bootstrap
 import com.sun.star.connection.XConnection
@@ -11,8 +13,10 @@ import com.sun.star.frame.XComponentLoader
 import com.sun.star.frame.XDesktop
 import com.sun.star.frame.XDispatchHelper
 import com.sun.star.frame.XDispatchProvider
+import com.sun.star.frame.XModel
 import com.sun.star.frame.XStorable
 import com.sun.star.uno.UnoRuntime
+import java.net.ConnectException
 import java.util.logging.Logger
 import kotlin.concurrent.thread
 
@@ -67,7 +71,7 @@ class DirectLibreOfficeSession(
             }
 
             if (connectionLocal == null) {
-                throw java.net.ConnectException(
+                throw ConnectException(
                     "Failed to connect to LibreOffice at $host:$port after $connectRetries attempts. " +
                             "Last error: ${lastException?.message}"
                 )
@@ -89,7 +93,7 @@ class DirectLibreOfficeSession(
 
         val serviceManagerObj = bridge.getInstance("StarOffice.ServiceManager")
         remoteOffice = serviceManagerObj.query()
-        val props = remoteOffice.query<com.sun.star.beans.XPropertySet>()
+        val props = remoteOffice.query<XPropertySet>()
         val defaultContext = props.getPropertyValue("DefaultContext")
         context = defaultContext.query()
     }
@@ -107,13 +111,13 @@ class DirectLibreOfficeSession(
         val desktop: XComponentLoader = desktopObj.query()
 
         val props = arrayOf(
-            com.sun.star.beans.PropertyValue().apply {
+            PropertyValue().apply {
                 Name = "Hidden"
                 Value = true
             }
         )
-
-        return desktop.loadComponentFromURL(inputUrl, "_blank", 0, props)
+        val component = desktop.loadComponentFromURL(inputUrl, "_blank", 0, props)
+        return component
     }
 
     /**
@@ -126,8 +130,8 @@ class DirectLibreOfficeSession(
         val store: XStorable = component.query()
 
         val props = arrayOf(
-            com.sun.star.beans.PropertyValue().apply { Name = "FilterName"; Value = filterName },
-            com.sun.star.beans.PropertyValue().apply { Name = "Overwrite"; Value = true }
+            PropertyValue().apply { Name = "FilterName"; Value = filterName },
+            PropertyValue().apply { Name = "Overwrite"; Value = true }
         )
 
         store.storeToURL(outputUrl, props)
@@ -151,7 +155,7 @@ class DirectLibreOfficeSession(
      */
     override fun getComponentDispatchProvider(component: XComponent): XDispatchProvider {
         val model = UnoRuntime.queryInterface(
-            com.sun.star.frame.XModel::class.java, component
+            XModel::class.java, component
         )
         val controller = model?.currentController
         val frame = controller?.frame

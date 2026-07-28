@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "ru.fiddlededee.unidoc.loconverter"
-version = "0.2.1"
+version = "0.2.2"
 
 subprojects {
     group = rootProject.group

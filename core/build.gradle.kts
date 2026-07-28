@@ -1,5 +1,58 @@
 plugins {
     kotlin("jvm")
+    `java-library`
+    `maven-publish`
+    signing
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+publishing {
+    repositories {
+        maven {
+            url = uri(layout.buildDirectory.dir("staging-deploy"))
+        }
+    }
+
+    publications {
+        create<MavenPublication>("mavenJava") {
+            artifactId = "unidoc-lo-converter-core"
+            from(components["java"])
+
+            pom {
+                name = "UniDoc LO Converter Core"
+                description = "Core library for LibreOffice document conversion"
+                url = "https://github.com/fiddlededee/unidoc-lo-converter"
+
+                licenses {
+                    license {
+                        name = "The Apache License, Version 2.0"
+                        url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
+                    }
+                }
+
+                scm {
+                    url = "https://github.com/fiddlededee/unidoc-lo-converter"
+                    connection = "scm:git://github.com:fiddlededee/unidoc-lo-converter.git"
+                    developerConnection = "scm:git://github.com:fiddlededee/unidoc-lo-converter.git"
+                }
+
+                developers {
+                    developer {
+                        id = "fiddlededee"
+                        name = "Nikolaj Potashnikov"
+                        email = "consulting@yandex.ru"
+                    }
+                }
+            }
+        }
+    }
+}
+
+signing {
+    sign(publishing.publications)
 }
 
 tasks.test {

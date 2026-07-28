@@ -8,6 +8,7 @@ build/
 assistant/*.md
 assistant/apikey
 .idea
+gradle.properties
 
 ### IntelliJ IDEA ###
 .idea/modules.xml

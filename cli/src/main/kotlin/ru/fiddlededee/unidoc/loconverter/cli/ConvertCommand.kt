@@ -82,8 +82,13 @@ class ConvertCommand : CliktCommand(name = "convert") {
                         File(inputFile.parentFile, "${inputFile.nameWithoutExtension}.$outputExt")
                     }
 
-                    converter.convert(inputFile, outputFile, format)
-                    echo("Successfully converted ${inputFile.name} -> ${outputFile.name} ($format)")
+                    try {
+                        converter.convert(inputFile, outputFile, format)
+                        echo("Successfully converted ${inputFile.name} -> ${outputFile.name} ($format)")
+                    } catch (e : Exception) {
+                        echo("Unable to convert ${inputFile.name} -> ${outputFile.name} ($format):" +
+                                "\n${e.message}")
+                    }
                 }
             }
         }

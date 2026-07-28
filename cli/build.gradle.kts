@@ -13,6 +13,7 @@ dependencies {
 }
 
 tasks.jar {
+    dependsOn(project(":core").tasks.jar)
     archiveBaseName.set("unidoc-lo-converter-cli")
     archiveVersion.set(project.version.toString())
     manifest.attributes["Main-Class"] = "ru.fiddlededee.unidoc.loconverter.cli.MainKt"
